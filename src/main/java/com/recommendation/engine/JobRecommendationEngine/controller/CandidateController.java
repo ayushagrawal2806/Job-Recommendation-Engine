@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,5 +25,10 @@ public class CandidateController {
     @GetMapping("/{id}")
     public ResponseEntity<Candidate> getCandidate(@PathVariable UUID id) {
         return ResponseEntity.ok(candidateService.getCandidateById(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Candidate>> getAllCandidates() {
+        return ResponseEntity.ok(candidateService.getAllCandidates());
     }
 }

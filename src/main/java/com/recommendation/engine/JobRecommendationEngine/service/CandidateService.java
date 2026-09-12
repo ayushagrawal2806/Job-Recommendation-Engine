@@ -5,6 +5,7 @@ import com.recommendation.engine.JobRecommendationEngine.repository.CandidateRep
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -20,5 +21,9 @@ public class CandidateService {
     public Candidate getCandidateById(UUID id) {
         return candidateRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Candidate not found with id: " + id));
+    }
+
+    public List<Candidate> getAllCandidates() {
+        return candidateRepository.findAll();
     }
 }

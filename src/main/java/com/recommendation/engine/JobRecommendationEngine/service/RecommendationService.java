@@ -1,5 +1,6 @@
 package com.recommendation.engine.JobRecommendationEngine.service;
 
+import com.recommendation.engine.JobRecommendationEngine.dto.CandidateMatchResult;
 import com.recommendation.engine.JobRecommendationEngine.dto.JobMatchResult;
 import com.recommendation.engine.JobRecommendationEngine.entity.Candidate;
 import com.recommendation.engine.JobRecommendationEngine.entity.Job;
@@ -36,18 +37,18 @@ public class RecommendationService {
                 .toList();
     }
 
-    public List<JobMatchResult> getBestCandidates(UUID jobId, Integer limit,
-                                                  Integer skillWeight, Integer experienceWeight,
-                                                  Integer locationWeight, Integer salaryWeight) {
+    public List<CandidateMatchResult> getBestCandidates(UUID jobId, Integer limit,
+                                                        Integer skillWeight, Integer experienceWeight,
+                                                        Integer locationWeight, Integer salaryWeight) {
         Job job = jobRepository.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("Job not found with id: " + jobId));
 
         List<Candidate> allCandidates = candidateRepository.findAll();
 
         return allCandidates.stream()
-                .map(candidate -> scoringService.score(candidate, job, skillWeight, experienceWeight, locationWeight, salaryWeight))
+                .map(candidate -> scoringService.scoreCandidate(candidate, job, skillWeight, experienceWeight, locationWeight, salaryWeight))
                 .filter(result -> result != null)
-                .sorted(Comparator.comparingInt(JobMatchResult::getTotalScore).reversed())
+                .sorted(Comparator.comparingInt(CandidateMatchResult::getTotalScore).reversed())
                 .limit(limit)
                 .toList();
     }
