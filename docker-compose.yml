@@ -1,0 +1,29 @@
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: job-match-postgres
+    environment:
+      POSTGRES_DB: job_match
+      POSTGRES_USER: jobmatch_user
+      POSTGRES_PASSWORD: jobmatch_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: job-recommendation-engine
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/job_match
+      SPRING_DATASOURCE_USERNAME: jobmatch_user
+      SPRING_DATASOURCE_PASSWORD: jobmatch_pass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+volumes:
+  postgres_data:
